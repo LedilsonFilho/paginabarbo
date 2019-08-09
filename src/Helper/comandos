@@ -1,0 +1,48 @@
+-Criar projrto
+composer create-project symfony/skeleton nome_do_projeto
+
+-habilitar @Route
+composer require annotation
+
+-Intalando ORM doctrine
+composer require symfony/orm-pack
+mudar arquivo .env para configurar Mysql
+
+-Intalar o pligin Maker
+composer require maker
+
+-Criar Entidade (Entity)
+php bin\console make:entity
+
+-criando migração
+php bin\console make:migration
+
+-rodar migração
+php bin\console doctrine:migrations:migrate
+
+-Criar Controller
+php bin\console make:controller
+
+-Pluigin de segurança
+composer require security
+composer require firebase/php-jwt
+
+-Criar usuario
+php bin\console make:user
+
+-Criar Fixtures
+composer require orm-fixtures --dev
+php bin\console make:fixtures
+
+-Encriptar senha
+php bin\console security:encode-password
+
+-Rodar Fixtures
+php bin\console doctrine:fixtures:load
+
+-Instalar TWIG (fazer páginas dinamicas)
+composer require twig
+composer require symfony/asset
+
+-Resolver problema CORS
+composer require nelmio/cors-bundle

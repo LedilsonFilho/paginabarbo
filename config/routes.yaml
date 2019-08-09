@@ -1,0 +1,130 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+novo_servico:
+  path: /servico
+  controller: App\Controller\ServicoController::novo
+  methods:
+    - POST
+atualiza_servico:
+  path: /servico/{id}
+  controller: App\Controller\ServicoController::atualiza
+  methods:
+    - POST
+remove_servico:
+  path: /servico/{id}
+  controller: App\Controller\ServicoController::remove
+  methods:
+    - DELETE
+lancamentos:
+  path: /lancamentos
+  controller: App\Controller\LancamentoController::buscarTodos
+  methods:
+    - GET
+atualiza_lancamento:
+  path: /lancamentos/{id}
+  controller: App\Controller\LancamentoController::atualiza
+  methods:
+    - POST   
+baixa_lancamento:
+  path: /baixa/{id}
+  controller: App\Controller\LancamentoController::atualiza
+  methods:
+    - POST
+remove_lancamento:
+  path: /lancamentos/{id}
+  controller: App\Controller\LancamentoController::remove
+  methods:
+    - DELETE
+novo_lancamento:
+  path: /lancamentos
+  controller: App\Controller\LancamentoController::novo
+  methods:
+    - POST
+Centro_de_Custo:
+  path: /centrodecusto
+  controller: App\Controller\CentroDeCustoController::buscarTodos
+  methods:
+    - GET
+atualiza_Centro_de_Custo:
+  path: /centrodecusto/{id}
+  controller: App\Controller\CentroDeCustoController::atualiza
+  methods:
+    - POST  
+nova_Centro_de_Custo:
+  path: /centrodecusto
+  controller: App\Controller\CentroDeCustoController::novo
+  methods:
+    - POST
+remove_Centro_de_Custo:
+  path: /centrodecusto/{id}
+  controller: App\Controller\CentroDeCustoController::remove
+  methods:
+    - DELETE
+Conta_Corrente:
+  path: /contacorrente
+  controller: App\Controller\ContaCorrenteController::buscarTodos
+  methods:
+    - GET
+atualiza_Conta_Corrente:
+  path: /contacorrente/{id}
+  controller: App\Controller\ContaCorrenteController::atualiza
+  methods:
+    - POST  
+nova_Conta_Corrente:
+  path: /contacorrente
+  controller: App\Controller\ContaCorrenteController::novo
+  methods:
+    - POST
+remove_Conta_Corrente:
+  path: /contacorrente/{id}
+  controller: App\Controller\ContaCorrenteController::remove
+  methods:
+    - DELETE
+indexcontacorrente:
+  path: /indexcontacorrente
+  controller: App\Controller\IndexContaCorrenteController::index
+  methods:
+    - GET
+indexcentrodecusto:
+  path: /indexcentrodecusto
+  controller: App\Controller\IndexCentroDeCustoController::index
+  methods:
+    - GET
+fluxodecaixa:
+  path: /fluxodecaixa
+  controller: App\Controller\FloxoDeCaixaController::index
+  methods:
+    - GET
+dashboard:
+  path: /dashboard
+  controller: App\Controller\DashboardController::index
+  methods:  
+    - GET
+transferencia:
+  path: /transferencia
+  controller: App\Controller\LancamentoController::transferencia
+  methods:  
+    - POST
+Usuarios:
+  path: /usuarios
+  controller: App\Controller\UserController::buscarTodos
+  methods:
+    - GET
+novo_Usuarios:
+  path: /usuarios
+  controller: App\Controller\UserController::novo
+  methods:
+    - POST
+indexusuarios:
+  path: /indexusuario
+  controller: App\Controller\IndexUsuarioController::index
+  methods:
+    - GET
+ipred:
+  path: /ipred
+  controller: App\Controller\IpredirectController::index  
+  methods:
+      - GET
+  
+   

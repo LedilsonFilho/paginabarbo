@@ -1,0 +1,234 @@
+{% extends 'baseSistema.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <!-- Card de Contas à Pagar -->
+    <div class="col-xl-4 col-md-4 mb-4">
+        <div class="card shadow">
+            <!-- Inicio da Table -->
+            <div class="card-header border-bottom">
+                <h6 class="m-0 font-weight-bold">Nova Conta Corrente</h6>
+            </div>
+            <div class="card-body p-0 text-center">           
+
+                <div class="col-sm-12 col-md-12">
+                    <form id="formExemplo" action="/contacorrente" method="POST" data-toggle="validator" role="form" class="mt-3">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <input id="novaag" type="text" name="ag" class="form-control" placeholder="Agência" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input id="novacc" type="text" name="cc" class="form-control"  placeholder="Conta Corrente"  required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input id="novonomeconta" type="text" name="nome" class="form-control" placeholder="Nome" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <input id="novogerente" type="text" name="gerente" class="form-control"  placeholder="Nome do Gerente" value="">
+                            </div>
+                            <div class="form-group col-md-8">
+                                <input id="novadescricaoconta" type="text" name="descricao" class="form-control" placeholder="Descrição" value="" required>
+                            </div>                            
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <input id="novoederecoag" type="text" name="endereco" class="form-control" placeholder="Endereço da Agência" value="">
+                            </div>
+                        </div>
+                    
+                </div>
+
+
+                <div class="card-header border-bottom text-left TableLinha RodapeCard">
+                    <div></div>
+                    <div class="text-right">                        
+                        <button type="submit" id="submitnovaconta" class="btn btn-primary">Salvar</button>
+                    </div>
+                </div>
+                </form>
+
+            </div>
+            <!-- fim Table -->
+        </div>
+    </div>
+
+    <!-- Card de Contas à Receber -->
+    <div class="col-xl-8 col-md-8 mb-4">
+        <div class="card shadow">
+            <!-- Inicio da Table -->
+            <div class="card-header border-bottom">
+                <h6 class="m-0 font-weight-bold">Contas Correntes</h6>
+            </div>
+            <div class="card-body p-0 text-center">
+                <table class="table table-striped table-bordered">
+                    <thead class="bg-light TableCabecalho">
+                        <tr>                            
+                            <th scope="col" class="border-0">Agência</th>
+                            <th scope="col" class="border-0">Conta</th>
+                            <th scope="col" class="border-0">Nome</th>
+                            <th scope="col" class="border-0">Gerente</th>
+                            <th scope="col" class="border-0">Descrição</th>
+                            <th scope="col" class="border-0">Endereço</th>
+                            <th scope="col" class="border-0"></th>
+                            <th scope="col" class="border-0"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="TableLinha">
+                        {% for contacorrente in listasimplescontacorrente %}
+                        <tr>                            
+                            <td>{{contacorrente.ag}}</td>
+                            <td>{{contacorrente.cc}}</td>
+                            <td>{{contacorrente.nome}}</td>
+                            <td>{{contacorrente.gerente}}</td>
+                            <td>{{contacorrente.descricao}}</td>
+                            <td>{{contacorrente.endereco}}</td>
+                            <td>
+                                <a href="#" data-toggle="modal" data-target="#editcontaModal" onclick="setaModalEditConta(
+                                '{{ contacorrente.id }}',
+                                '{{ contacorrente.ag}}',
+                                '{{ contacorrente.cc}}',
+                                '{{ contacorrente.nome}}',
+                                '{{ contacorrente.gerente}}',
+                                '{{ contacorrente.descricao }}',
+                                '{{ contacorrente.endereco }}',
+                                )">
+                                    <i class="fas fa-edit fa-sm"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="#" data-toggle="modal" data-target="#deletecontaModal" onclick="setaModalDeletConta(
+                                '{{ contacorrente.id }}',
+                                '{{ contacorrente.ag}}',
+                                '{{ contacorrente.cc}}',
+                                '{{ contacorrente.nome}}',
+                                '{{ contacorrente.gerente}}',
+                                '{{ contacorrente.descricao }}',
+                                '{{ contacorrente.endereco }}',
+                                )">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="card-header border-bottom text-left TableLinha RodapeCard">
+
+                </div>
+            </div>
+            <!-- fim Table -->
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Modal-->
+<div class="modal fade" id="editcontaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Conta Corrente</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="col-sm-12 col-md-12">
+                <form id="formmodaledit" method="POST" data-toggle="validator" role="form" class="mt-3">
+                 <input type="hidden" id="idcontacorrenteedit" name="idcontacorrenteedit" value="">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <input id="editag" value="" type="text" name="ag" class="form-control" placeholder="Agência" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input id="editcc" type="text" name="cc" class="form-control"  placeholder="Conta Corrente"  required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input id="editnomeconta" type="text" name="nome" class="form-control" placeholder="Nome" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <input id="editgerente" type="text" name="gerente" class="form-control"  placeholder="Nome do Gerente" value="">
+                            </div>
+                            <div class="form-group col-md-8">
+                                <input id="editdescricaoconta" type="text" name="descricao" class="form-control" placeholder="Descrição" value="" required>
+                            </div>                            
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <input id="editenderecoag" type="text" name="endereco" class="form-control" placeholder="Endereço da Agência" value="">
+                            </div>
+                        </div>
+                    
+                </div>
+
+
+                <div class="card-header border-bottom text-left TableLinha RodapeCard">
+                    <div></div>
+                    <div class="text-right">                        
+                        <button type="submit" id="submitnovaconta" class="btn btn-primary">Salvar</button>
+                    </div>
+                </div>
+                </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete Modal-->
+<div class="modal fade" id="deletecontaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tem cetreza que deseja excluir essa Conta Corrente??</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="col-sm-12 col-md-12">
+                <form class="mt-3" id="formdelaconta">
+                <input type="hidden" id="idcontacorrentedelete" name="idcontacorrente" value="">
+                     <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <div id="deleteag"></div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div id="deletecc"></div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div id="deletenomeconta"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <div id="deletegerente"></div>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <div id="deletedescricaoconta"></div>
+                            </div>                            
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <div id="deleteenderecoag"></div>
+                            </div>
+                        </div>                       
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" href="#" onclick="deletacontacorrente()">Ok</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

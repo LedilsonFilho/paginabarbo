@@ -1,0 +1,543 @@
+{% extends 'baseIndexHome.html.twig' %}
+
+{% block body %}
+<div class="container">
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="mb-2">
+        <a href="#" data-toggle="modal" class="btn btn-primary" data-target="#NovoSrvicoModal" onclick="">Adicionar
+            Projeto</a>
+        <a href="/logout" class="btn btn-primary">Logout</a>
+    </div>
+    {% endif %}
+
+    <div class="row pad-row text-center pt-3 pb-5">
+        <div class="col-md-3 col-sm-3 col-xs-6">
+            <a href="#" data-toggle="modal" data-target="#ModalShopping" class="d-flex justify-content-center text-dark btn">
+                <div class="circle c1">
+                    <img src="img/logo.png" alt="" />
+                    <h5>Shopping Centers</h5>
+                </div>
+            </a>
+            <a class="d-flex justify-content-center backgroundbotao text-white rounded">
+                <h6>Principais projetos em Shopping Centers</h6>
+            </a>
+        </div>        
+        <div class="col-md-3 col-sm-3 col-xs-6">
+            <a href="#" data-toggle="modal" data-target="#ModalComercial" class="d-flex justify-content-center text-dark btn">
+                <div class="circle c1">
+                    <img src="img/logo.png" alt="" />
+                    <h5>Comercial</h5>
+                </div>
+            </a>
+            <a class="d-flex justify-content-center backgroundbotao text-white rounded">
+                <h6>Principais projetos Comerciais</h6>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-6">
+            <a href="#" data-toggle="modal" data-target="#ModalIndustrial" class="d-flex justify-content-center text-dark btn">
+                <div class="circle c1">
+                    <img src="img/logo.png" alt="" />
+                    <h5>Industrial</h5>
+                </div>
+            </a>
+            <a class="d-flex justify-content-center backgroundbotao text-white rounded">
+                <h6>Principais projetos Industriais</h6>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-6">
+            <a href="#" data-toggle="modal" data-target="#ModalResidencial" class="d-flex justify-content-center text-dark btn">
+                <div class="circle c1">
+                    <img src="img/logo.png" alt="" />
+                    <h5>Residencial</h5>
+                </div>
+            </a>
+            <a class="d-flex justify-content-center backgroundbotao text-white rounded">
+                <h6>Principais projetos Residenciais</h6>
+            </a>
+        </div>
+    </div>
+    <!-- Modal Shopping -->
+    <div class="modal fade" id="ModalShopping">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Shopping Centers</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        {% for servico in listashopping %}
+                        <div class="col-md-4 col-sm-4 col-xs-6 mb-3">
+
+                            <div class="card h-100">
+                                <img class="card-img-top" src="{{servico.foto}}" alt="">
+                                <div class="card-body d-flex flex-column m-0 p-0">
+                                    <div class="row d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h5 class="card-title">{{servico.projeto}}</h5>
+                                        <h6 class="card-title d-none d-xl-block">Cliente: {{servico.cliente}}</h6>
+                                    </div>
+                                    <div class="row mt-auto d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h6 class="card-text d-none d-xl-block">{{servico.descricao}}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer justify-content-between d-none d-xl-flex">
+                                    <a class="card-text">{{servico.local}}</a>
+                                    <a class="card-text">{{servico.data.format('M/Y')}}</a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#editServicoModal" onclick="setaModalEditServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-edit fa-sm"></i>
+                                    </a>
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#deleteServicoModal"
+                                        onclick="setaModalDeletaServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal Industrial -->
+    <div class="modal fade" id="ModalIndustrial">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Projetos Industriais</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        {% for servico in listaindustrial %}
+                        <div class="col-md-4 col-sm-4 col-xs-6 mb-3">
+
+                            <div class="card h-100">
+                                <img class="card-img-top" src="{{servico.foto}}" alt="">
+                                <div class="card-body d-flex flex-column m-0 p-0">
+                                    <div class="row d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h5 class="card-title">{{servico.projeto}}</h5>
+                                        <h6 class="card-title d-none d-xl-block">Cliente: {{servico.cliente}}</h6>
+                                    </div>
+                                    <div class="row mt-auto d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h6 class="card-text d-none d-xl-block">{{servico.descricao}}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer justify-content-between d-none d-xl-flex">
+                                    <a class="card-text">{{servico.local}}</a>
+                                    <a class="card-text">{{servico.data.format('M/Y')}}</a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#editServicoModal" onclick="setaModalEditServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-edit fa-sm"></i>
+                                    </a>
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#deleteServicoModal"
+                                        onclick="setaModalDeletaServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+     <!-- Modal Comercial -->
+    <div class="modal fade" id="ModalComercial">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Projetos Comerciais</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        {% for servico in listacomercial %}
+                        <div class="col-md-4 col-sm-4 col-xs-6 mb-3">
+
+                            <div class="card h-100">
+                                <img class="card-img-top" src="{{servico.foto}}" alt="">
+                                <div class="card-body d-flex flex-column m-0 p-0">
+                                    <div class="row d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h5 class="card-title">{{servico.projeto}}</h5>
+                                        <h6 class="card-title d-none d-xl-block">Cliente: {{servico.cliente}}</h6>
+                                    </div>
+                                    <div class="row mt-auto d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h6 class="card-text d-none d-xl-block">{{servico.descricao}}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer justify-content-between d-none d-xl-flex">
+                                    <a class="card-text">{{servico.local}}</a>
+                                    <a class="card-text">{{servico.data.format('M/Y')}}</a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#editServicoModal" onclick="setaModalEditServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-edit fa-sm"></i>
+                                    </a>
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#deleteServicoModal"
+                                        onclick="setaModalDeletaServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+     <!-- Modal Residencial -->
+    <div class="modal fade" id="ModalResidencial">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Projetos Residenciais</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        {% for servico in listaresidencial %}
+                        <div class="col-md-4 col-sm-4 col-xs-6 mb-3">
+
+                            <div class="card h-100">
+                                <img class="card-img-top" src="{{servico.foto}}" alt="">
+                                <div class="card-body d-flex flex-column m-0 p-0">
+                                    <div class="row d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h5 class="card-title">{{servico.projeto}}</h5>
+                                        <h6 class="card-title d-none d-xl-block">Cliente: {{servico.cliente}}</h6>
+                                    </div>
+                                    <div class="row mt-auto d-flex justify-content-between m-0 p-xl-2 p-sm-0">
+                                        <h6 class="card-text d-none d-xl-block">{{servico.descricao}}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer justify-content-between d-none d-xl-flex">
+                                    <a class="card-text">{{servico.local}}</a>
+                                    <a class="card-text">{{servico.data.format('M/Y')}}</a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#editServicoModal" onclick="setaModalEditServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-edit fa-sm"></i>
+                                    </a>
+                                    <a href="#" class="m-1" data-toggle="modal" data-target="#deleteServicoModal"
+                                        onclick="setaModalDeletaServico(
+                                            '{{ servico.id }}',
+                                            '{{ servico.foto}}',
+                                            '{{ servico.projeto}}',
+                                            '{{ servico.cliente}}',                                
+                                            '{{ servico.descricao }}',  
+                                            '{{ servico.local }}',
+                                            '{{ servico.data.format('Y-m-d') }}', 
+                                            '{{ servico.categoria }}',                             
+                                            )">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    {% if is_granted('ROLE_ADMIN') %}
+    <!-- Novo Modal-->
+    <div class="modal fade" id="NovoSrvicoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicional Projeto</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="col-sm-12 col-md-12">
+                    <form action="\servico" method="POST" data-toggle="validator" role="form"
+                        enctype="multipart/form-data" class="mt-3">
+                        <input type="hidden" id="fotob64" name="foto" value="">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <input name="projeto" type="text" placeholder="Projeto" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input name="cliente" type="text" placeholder="Cliente" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input name="local" type="text" placeholder="Local" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input name="data" type="date" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select id="categoria" name="categoria" class="form-control" required>
+                                    <option value="" disabled selected>Categoria</option>                                    
+                                    <option value="shopping">Shopping Centers</option>
+                                    <option value="industrial">Industrial</option>
+                                    <option value="residencial">Residencial</option>
+                                    <option value="comercial">Comercial</option>                                    
+                                </select>                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <img id="foto" class="img-thumbnail" src="" alt="">                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <input id="inpnovo" type='file'>                            
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <textarea name="descricao" cols="40" rows="5" placeholder="Descrição"
+                                    class="form-control" required></textarea>
+                            </div>
+                        </div>
+                </div>
+                <div class="card-header border-bottom text-left TableLinha RodapeCard">
+                    <div></div>
+                    <div class="text-right">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="submitnovaconta" class="btn btn-primary">Salvar</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Modal-->
+    <div class="modal fade" id="deleteServicoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Deletar Projeto</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="col-sm-12 col-md-12">
+                    <form id="formulariodeleteservico" data-toggle="validator" role="form"
+                        enctype="multipart/form-data" class="mt-3">
+                        <input type="hidden" id="deleteidsevico" name="idcservicodelete" value="">
+                        <input type="hidden" id="deletefotob64" name="foto" value="">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <div id="deleteprojetos"></div>                                
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div id="deletecliente"></div>                                
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div id="deletelocal"></div>                                 
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <div id="deletedata"></div>                                
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div id="deletecategoria"></div>                                                              
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <img id="deletefoto" class="img-thumbnail" src="" alt="">                                
+                            </div>
+                        </div>                        
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <div id="deletedescricao"></div>                                
+                            </div>
+                        </div>
+                </div>
+                <div class="card-header border-bottom text-left TableLinha RodapeCard">
+                    <div></div>
+                    <div class="text-right">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <a class="btn btn-primary" href="#" onclick="deletaservico()">Excluir</a>                        
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+     <!-- Edit Modal-->
+    <div class="modal fade" id="editServicoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Projeto</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="col-sm-12 col-md-12">
+                    <form id="formularioeditservico" method="POST" data-toggle="validator" role="form"
+                        enctype="multipart/form-data" class="mt-3">
+                        <input type="hidden" id="idsevico" name="idcservicoedit" value="">
+                        <input type="hidden" id="editfotob64" name="foto" value="">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <input id="editprojetos" name="projeto" type="text" placeholder="Projeto" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input id="editcliente" name="cliente" type="text" placeholder="Cliente" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input id="editlocal" name="local" type="text" placeholder="Local" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input id="editdata" name="data" type="date" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select id="editcategoria" name="categoria" class="form-control" required>
+                                    <option value="" disabled selected>Categoria</option>                                    
+                                    <option value="shopping">Shopping Centers</option>
+                                    <option value="industrial">Industrial</option>
+                                    <option value="residencial">Residencial</option>
+                                    <option value="comercial">Comercial</option>                                    
+                                </select>                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <img id="editifoto" class="img-thumbnail" src="" alt="">                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <input id="inp" type='file'>                            
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <textarea id="editdescricao" name="descricao" cols="40" rows="5" placeholder="Descrição"
+                                    class="form-control" required></textarea>
+                            </div>
+                        </div>
+                </div>
+                <div class="card-header border-bottom text-left TableLinha RodapeCard">
+                    <div></div>
+                    <div class="text-right">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="submitnovaconta" class="btn btn-primary">Editar</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<!-- /.container -->
+{% endblock %}

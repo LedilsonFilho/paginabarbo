@@ -1,0 +1,102 @@
+/*!
+ * Start Bootstrap - Busines Frontpage (https://startbootstrap.com/template-overviews/business-frontpage)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-business-frontpage/blob/master/LICENSE)
+ */
+body {
+  padding-top: 56px;
+  background:url('../img/fundo.png');  
+  background-size: 100%;
+}
+
+
+
+.textocontato{
+  font-size: 0.8rem;
+  
+}
+.card-img-top {
+    width: 100%;
+    height: 10vw;
+    object-fit: cover;
+}
+
+.card-img {
+  width: 100%;
+  height: 25vw;
+  object-fit: cover;
+}
+
+.teste{
+  max-height: 70px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  
+  
+}
+html {
+  font-size: 1rem;
+}
+
+@include media-breakpoint-up(sm) {
+  html {
+    font-size: 1.2rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  html {
+    font-size: 1.4rem;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  html {
+    font-size: 1.6rem;
+  }
+}
+
+.xbootstrap {
+  color: #202020;
+  background-color: rgba(0, 0, 0, 0.2);
+  letter-spacing: .1em;
+  text-shadow: -1px -1px 1px #111, 2px 2px 1px #363636;
+}
+
+.backgroundbotao{
+  background-color:  rgb(110, 3, 3);
+  max-width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+
+
+.circle{
+  border-radius: 50%;
+  background: #fff;
+  padding: 15px;
+  text-align: center;
+  height: 150px;
+  width: 150px;
+  border: 8px solid #F2F2F2;
+    
+  transition: all 0.5s;
+  -moz-transition: all 0.5s; /* Firefox 4 */
+  -webkit-transition: all 0.5s; /* Safari and Chrome */
+  -o-transition: all 0.5s; /* Opera */
+ 
+}
+.c1:hover{
+  background: rgb(112, 44, 44);
+  color: #ffffff;
+}
+.c1 .blue{
+  color: rgb(112, 44, 44);
+}
+.c1:hover .blue{
+  color: #ffffff;
+}
+
+
