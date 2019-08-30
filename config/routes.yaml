@@ -126,5 +126,19 @@ ipred:
   controller: App\Controller\IpredirectController::index  
   methods:
       - GET
-  
+agendamento:
+  path: /agendamentos
+  controller: App\Controller\AgendamentosController::index  
+  methods:
+      - GET
+agendamento_add:
+  path: /agendamentos
+  controller: App\Controller\AgendamentosController::addagenda  
+  methods:
+      - POST
+remove_agendamento:
+  path: /agendamentos/{id}
+  controller: App\Controller\AgendamentosController::removeagendamento
+  methods:
+    - DELETE
    

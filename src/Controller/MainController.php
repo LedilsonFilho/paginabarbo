@@ -9,19 +9,26 @@ use App\Repository\ContaCorrenteRepository;
 use App\Repository\CentroDeCustoRepository;
 use App\Repository\LancamentoRepository;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\AgendamentosRepository;
+use App\Entity\Agendamentos;
+use Symfony\Component\HttpFoundation\Response;
+use \Datetime;
 
 class MainController extends AbstractController
 {
-    public function __construct(            
+    public function __construct(
+        AgendamentosRepository $agendamentosRepository,            
         ContaCorrenteRepository $contacorrenterepository, 
         CentroDeCustoRepository $centrodecustorepository, 
         LancamentoRepository $lancamentorepository,
         UserRepository $userrepository         
-    ) {             
+    ) {  
+        $this->AgendamentosRepository = $agendamentosRepository;           
         $this->contacorrenterepository = $contacorrenterepository;
         $this->centrodecustorepository = $centrodecustorepository;
         $this->lancamentorepository =$lancamentorepository;   
-        $this->userrepository =$userrepository;      
+        $this->userrepository =$userrepository;
+              
     }
 
     public function listapendentes($tipo){        
@@ -31,8 +38,7 @@ class MainController extends AbstractController
         $saldoprevisao = 0;
         $saldoconsolidado = 0;
         $listavalida = array();
-        foreach($lista as $item){
-            
+        foreach($lista as $item){            
             if ($item->getIdconta()->getId() != "35" and $item->getIdconta()->getId() != "34" ){ 
                 array_push($listavalida, $item);       
                 if($item->getprevisao() == 0){
@@ -41,12 +47,7 @@ class MainController extends AbstractController
                 if($item->getprevisao() == 1){
                     $saldoprevisao += $item->getvalor();
                 }
-            }
-
-
-
-
-            
+            }            
         }
         $total = $saldoconsolidado + $saldoprevisao;
         $listalancamento = array(
@@ -188,5 +189,100 @@ class MainController extends AbstractController
             
         );        
         return $graficopie;
+    }
+
+    public function listaagendamentos($tipo){        
+        $filtro = array('tipo' => $tipo);        
+        $lista = $this->AgendamentosRepository->findBy($filtro);
+        
+        $saldoprevisao = 0;
+        $saldoconsolidado = 0;
+        
+        $total = $saldoconsolidado + $saldoprevisao;
+        $lista = array(
+            'lista'=>$lista, 
+            'saldoprevisao' => $saldoprevisao, 
+            'saldoconsolidado' => $saldoconsolidado, 
+            'total' => $total );
+        
+        return $lista;
+
+    }
+
+    public function addagenda(Request $request)
+    {   
+        if ($request->request->get('id') <> 0){
+            $agenda = $this->AgendamentosRepository->find($request->request->get('id'));
+
+        }else{
+            $agenda = new Agendamentos();
+        }
+
+        $data = \DateTime::createFromFormat('Y-m-d', $request->request->get('data'));  
+        $requestitens = $request->request->get('itens'); 
+        $total = str_replace("," , ".", str_replace(".", "", $request->request->get('total'))); 
+        echo $total;     
+        
+        $agenda->setData($data)
+                ->setDescricao($request->request->get('descricao'))
+                ->setTipo($request->request->get('tipo'))
+                ->setTotal($total);       
+
+        $itens = $requestitens;
+        $iten = explode(",", $itens);
+
+        $size = count($iten);
+
+        for ($i = 0; $i < $size; $i++) {
+            $itenadd = $this->lancamentorepository->find($iten[$i]);
+            $agenda->addIten($itenadd);            
+        }
+
+        $this->entityManager->persist($agenda);       
+        $this->entityManager->flush();   
+        
+        return $this->redirectToRoute('dashboard');    
+       
+    }
+
+    public function removeagendamento(int $id): Response
+    {       
+        $agenda = $this->AgendamentosRepository->find($id);      
+        $teste = $agenda->getItens();  
+
+        echo count($teste);
+        foreach ($teste as $value) { 
+            echo $value->getId();          
+            $agenda->removeIten($value);          
+        }      
+           
+        $this->entityManager->persist($agenda);
+        $this->entityManager->flush();   
+        $agenda = $this->AgendamentosRepository->find($id);    
+        $this->entityManager->remove($agenda); 
+        $this->entityManager->flush(); 
+        
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    public function listaitensagenda(int $id)
+    {      
+       if ($id <> 0){
+        $agenda = $this->AgendamentosRepository->find($id);      
+        $itens = $agenda->getItens(); 
+    
+        $lista = array(
+            'lista'=>$itens, 
+            'agenda' => $agenda 
+             );
+       }else{
+        $lista = array(
+            'lista'=>"", 
+            'agenda' => array( 'id' => 0, 'data' => new DateTime(), 'descricao' => "", 'total' => "") 
+             );
+
+       }  
+               
+        return $lista;
     }
 }

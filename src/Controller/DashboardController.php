@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\UserRepository;
+use App\Repository\AgendamentosRepository;
 
 class DashboardController extends MainController
 {
@@ -21,13 +22,14 @@ class DashboardController extends MainController
      */
     protected $factory;
 
-    public function __construct(            
+    public function __construct(
+        AgendamentosRepository $agendamentosRepository,            
         ContaCorrenteRepository $contacorrenterepository,
         CentroDeCustoRepository $centrodecustorepository, 
         LancamentoRepository $lancamentorepository,
         UserRepository $userrepository       
     ) {  
-        parent::__construct($contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository);          
+        parent::__construct( $agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository);          
             
     }    
     
@@ -47,6 +49,8 @@ class DashboardController extends MainController
         $listapendentesCredito = $this->listapendentes(true);
         $listapendentesDebito = $this->listapendentes(false);
         $graficoBarra = $this->graficoBarra();
+        $listaagendamentocredito = $this->listaagendamentos(false);
+        $listaagendamentosdebito = $this->listaagendamentos(true);
               
             return $this->render('dashboard/index.html.twig', [
             'listacontacorrente' => $this->listacontacorrente(),
@@ -67,6 +71,8 @@ class DashboardController extends MainController
             'chartpieCores' =>  $chartpie['cores'],
             'chartpieValores' => $chartpie['valores'],
             'chartpieLabels' => $chartpie['labels'],
+            'agendamentoscredito' => $listaagendamentocredito['lista'],
+            'agendamentosdebito' => $listaagendamentosdebito['lista'],
             
             
         ]);

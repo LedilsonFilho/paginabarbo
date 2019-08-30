@@ -10,18 +10,20 @@ use App\Repository\CentroDeCustoRepository;
 use App\Repository\LancamentoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Repository\AgendamentosRepository;
 
 class IndexUsuarioController extends MainController
 {
 
-    public function __construct(            
+    public function __construct(  
+        AgendamentosRepository $agendamentosRepository,      
         ContaCorrenteRepository $contacorrenterepository,
         CentroDeCustoRepository $centrodecustorepository, 
-        LancamentoRepository $lancamentorepository,     
-        UserRepository $userrepository
-    ) {
-        parent::__construct($contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository);     
-          
+        LancamentoRepository $lancamentorepository,
+        UserRepository $userrepository       
+    ) {  
+        parent::__construct($agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository);          
+            
     }
     
 

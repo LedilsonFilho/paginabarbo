@@ -258,5 +258,140 @@ function deletacontacorrente() {
     });
 }
 
+function salvaragenda(tipo, id) {
+    //console.log('SALVAR');
+    var tableRef = document.getElementById('tablaagendamento').getElementsByTagName('tbody')[0];
+    var totaltexto = document.getElementById('totaltexto').innerHTML;
+    //console.log(totaltexto);
+    //teste = document.getElementById('dataagenda').value;        
+    var agendadata = document.getElementById('dataagenda').value;
+     var agendadescricao = document.getElementById('agendadescricao').value;
+    var rowCount = tableRef.rows.length;
+    var itens = [];
+
+
+    for (var i = 0; i < rowCount; i++) {
+        var row = tableRef.rows[i];
+        itens.push(row.cells[0].innerHTML)
+    }
+
+    post('/agendamentos', { itens: itens, data: agendadata, descricao: agendadescricao, tipo: tipo, total: totaltexto, id: id}, 'POST');
+    //console.log(itens);
+}
+function additemagenda(id, data, descricao, valor) {
+    // Get the checkbox
+    var checkBox = document.getElementById(id);
+    var tableRef = document.getElementById('tablaagendamento').getElementsByTagName('tbody')[0];
+    var total = 0;
+
+    // If the checkbox is checked, display the output text
+    if (checkBox.checked == true) {
+
+        //console.log(descricao);
+
+
+        // Insert a row in the table at the last row
+        var newRow = tableRef.insertRow();
+
+        // Insert a cell in the row at index 0
+        var newCell0 = newRow.insertCell(0);
+        var newCell1 = newRow.insertCell(1);
+        var newCell2 = newRow.insertCell(2);
+        var newCell3 = newRow.insertCell(3);
+
+        // Append a text node to the cell
+        var auxid = document.createTextNode(id);
+        var auxdata = document.createTextNode(data);
+        var auxdescricao = document.createTextNode(descricao);
+        var auxvalor = document.createTextNode(valor);
+        newCell0.appendChild(auxid);
+        newCell1.appendChild(auxdata);
+        newCell2.appendChild(auxdescricao);
+        newCell3.appendChild(auxvalor);
+
+        var rowCount = tableRef.rows.length;
+
+        for (var i = 0; i < rowCount; i++) {
+            var row = tableRef.rows[i];
+            total = parseFloat(total) + parseFloat(row.cells[3].innerHTML.replace(".", "").replace(",", "."));
+
+        }
+        var totaltexto = document.getElementById('totaltexto');
+        totaltexto.innerHTML = total.toFixed(2) // always two decimal digits
+            .replace('.', ',') // replace decimal point character with ,
+            .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+
+    } else {
+        var totaltexto = document.getElementById('totaltexto');
+        total = parseFloat(totaltexto.innerHTML.replace(".", "").replace(",", "."));
+        //console.log(totaltexto.innerHTML.replace(".", "").replace(",", "."))          
+        var rowCount = tableRef.rows.length;
+        for (var i = 0; i < rowCount; i++) {
+            var row = tableRef.rows[i];
+            if (row.cells[0].innerHTML == id) {
+                //console.log(row.rowIndex);
+                tableRef.deleteRow(row.rowIndex - 1);
+                total = parseFloat(total) - parseFloat(row.cells[3].innerHTML.replace(".", "").replace(",", "."));
+
+            }
+
+        }
+
+
+        totaltexto.innerHTML = total.toFixed(2) // always two decimal digits
+            .replace('.', ',') // replace decimal point character with ,
+            .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+        //tableRef.deleteRow(0); 
+    }
+}
+
+function post(path, params, method) {
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    const form = document.createElement('form');
+    form.method = method;
+    form.action = path;
+
+    for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = params[key];
+
+            form.appendChild(hiddenField);
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function deletaagendamento(id) {
+    var URL = "/agendamentos/" + id;    
+
+     $.ajax({
+        url: URL,
+        type: 'DELETE',        
+        success: function (result) {
+            //alert("success?");
+           // $('#deleteLancamentoModal').modal('hide');
+            location.reload();
+        },
+        error: function(xhr, textStatus, errorThrow){
+            document.getElementById('testeerro').innerHTML =xhr.responseText;
+            //alert();
+            $('#deleteLancamentoModal').modal('hide');
+        }
+        
+    }); 
+    
+
+    //post('/agendamentos', { itens: itens, data: agendadata, descricao: agendadescricao, tipo: tipo, total: totaltexto}, 'POST');
+    console.log(id);
+}
+
 
 

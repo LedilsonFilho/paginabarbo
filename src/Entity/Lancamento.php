@@ -79,6 +79,11 @@ class Lancamento implements \JsonSerializable
      */
     private $valorpago;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Agendamentos", inversedBy="itens")
+     */
+    private $agendamentos;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -244,6 +249,18 @@ class Lancamento implements \JsonSerializable
     public function setValorpago(?float $valorpago): self
     {
         $this->valorpago = $valorpago;
+
+        return $this;
+    }
+
+    public function getAgendamentos(): ?Agendamentos
+    {
+        return $this->agendamentos;
+    }
+
+    public function setAgendamentos(?Agendamentos $agendamentos): self
+    {
+        $this->agendamentos = $agendamentos;
 
         return $this;
     }
