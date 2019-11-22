@@ -129,4 +129,23 @@ class LancamentoRepository extends ServiceEntityRepository
         $post = $qb->getQuery()->getResult();
         return $post;
     }
+
+    public function findPagarReceber($tipo, $datainicial, $datafinal)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->Where('c.previsao = true')
+            ->andWhere('c.debito = :debito')
+            ->andWhere('c.data >= :datainicial')
+            ->andWhere('c.data <= :datafinal')
+            ->andWhere('c.debito = :debito');            
+
+        $qb->setParameter('datainicial', $datainicial)
+            ->setParameter('datafinal', $datafinal) 
+            ->setParameter('debito', $tipo)          
+            ->orderBy('c.data', 'ASC');            
+
+        $post = $qb->getQuery()->getResult();
+        return $post;
+    }
 }

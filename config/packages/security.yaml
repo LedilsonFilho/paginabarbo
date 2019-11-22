@@ -46,7 +46,7 @@ security:
     access_control:
         - { path: ^/weblogin, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/indexservico, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/ipred.aspx, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/ipred, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # Logged in
         - { path: ^/(.+), roles: IS_AUTHENTICATED_FULLY }
         # no authentication for the homepage:

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\UserRepository;
 use App\Repository\AgendamentosRepository;
+use App\Repository\FluxoRepository;
 
 class DashboardController extends MainController
 {
@@ -27,14 +28,23 @@ class DashboardController extends MainController
         ContaCorrenteRepository $contacorrenterepository,
         CentroDeCustoRepository $centrodecustorepository, 
         LancamentoRepository $lancamentorepository,
-        UserRepository $userrepository       
+        UserRepository $userrepository,    
+        FluxoRepository $fluxorepository    
     ) {  
-        parent::__construct( $agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository);          
+        parent::__construct( $agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository, $fluxorepository);          
             
     }    
     
     public function index(Request $request)
     {    
+        $datainicial = $request->request->get('datainicial');
+        $datafinal = $request->request->get('datafinal');
+        if ($datainicial == null){
+            $datainicial = "2019-01-01";
+        }
+        if ($datafinal == null){
+            $datafinal = date("Y-m-d");
+        }
 
         $graficocc = $request->query->get('graficocc');  
         $graficoresultado = $request->query->get('ano');      
@@ -46,9 +56,10 @@ class DashboardController extends MainController
         }   
         
         $chartpie = $this->graficoPie($request);
-        $listapendentesCredito = $this->listapendentes(true);
-        $listapendentesDebito = $this->listapendentes(false);
-        $graficoBarra = $this->graficoBarra();
+        $listapendentesCredito = $this->listapendentes(true, $datainicial, $datafinal);
+        $listapendentesDebito = $this->listapendentes(false, $datainicial, $datafinal);
+        $graficoBarra = $this->graficoBarra(); 
+        $graficoFluxo = $this->graficoFluxo(31,'2019-09-01');
         $listaagendamentocredito = $this->listaagendamentos(false);
         $listaagendamentosdebito = $this->listaagendamentos(true);
               
@@ -73,6 +84,10 @@ class DashboardController extends MainController
             'chartpieLabels' => $chartpie['labels'],
             'agendamentoscredito' => $listaagendamentocredito['lista'],
             'agendamentosdebito' => $listaagendamentosdebito['lista'],
+            'graficoFluxoData' => $graficoFluxo['arraydata'],
+            'graficoFluxoDebito' => $graficoFluxo['arraydebito'],
+            'graficoFluxoCredito' => $graficoFluxo['arraycredito'],
+            'graficoFluxoSaldo' => $graficoFluxo['arraysaldo'],
             
             
         ]);

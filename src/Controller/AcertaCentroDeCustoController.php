@@ -11,6 +11,7 @@ use App\Repository\LancamentoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\AgendamentosRepository;
+use App\Repository\FluxoRepository;
 
 class AcertaCentroDeCustoController extends MainController
 {
@@ -19,9 +20,10 @@ class AcertaCentroDeCustoController extends MainController
         ContaCorrenteRepository $contacorrenterepository,
         CentroDeCustoRepository $centrodecustorepository, 
         LancamentoRepository $lancamentorepository,
-        UserRepository $userrepository       
+        UserRepository $userrepository, 
+        FluxoRepository $fluxorepository      
     ) {  
-        parent::__construct($agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository);          
+        parent::__construct($agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository, $fluxorepository);          
             
     }
 

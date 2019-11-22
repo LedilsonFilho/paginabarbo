@@ -21,6 +21,7 @@ $(document).ready(function () {
     }
   });
   $('#tablecontasapagar').DataTable({
+    "bSort": false,
     "language": {
       "lengthMenu": "Mostrando _MENU_ registros por página",
       "zeroRecords": "Nada encontrado",
@@ -30,6 +31,7 @@ $(document).ready(function () {
     }
   });
   $('#tablecontasareceber').DataTable({
+    "bSort": false,
     "language": {
       "lengthMenu": "Mostrando _MENU_ registros por página",
       "zeroRecords": "Nada encontrado",

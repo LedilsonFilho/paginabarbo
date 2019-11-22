@@ -141,4 +141,9 @@ remove_agendamento:
   controller: App\Controller\AgendamentosController::removeagendamento
   methods:
     - DELETE
+indexpagarreceber:
+  path: /pagarreceber
+  controller: App\Controller\IndexPagarReceberController::index
+  methods:
+    - GET|POST
    

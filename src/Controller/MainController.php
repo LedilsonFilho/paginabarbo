@@ -14,6 +14,8 @@ use App\Entity\Agendamentos;
 use Symfony\Component\HttpFoundation\Response;
 use \Datetime;
 
+use App\Repository\FluxoRepository;
+
 class MainController extends AbstractController
 {
     public function __construct(
@@ -21,19 +23,21 @@ class MainController extends AbstractController
         ContaCorrenteRepository $contacorrenterepository, 
         CentroDeCustoRepository $centrodecustorepository, 
         LancamentoRepository $lancamentorepository,
-        UserRepository $userrepository         
+        UserRepository $userrepository,
+        FluxoRepository $fluxorepository         
     ) {  
         $this->AgendamentosRepository = $agendamentosRepository;           
         $this->contacorrenterepository = $contacorrenterepository;
         $this->centrodecustorepository = $centrodecustorepository;
         $this->lancamentorepository =$lancamentorepository;   
         $this->userrepository =$userrepository;
+        $this->fluxorepository =$fluxorepository;
               
     }
 
-    public function listapendentes($tipo){        
-        $filtro = array('debito' => $tipo, 'previsao' => true);        
-        $lista = $this->lancamentorepository->findBy($filtro);
+    public function listapendentes($tipo, $datainicial, $datafinal){        
+        //$filtro = array('debito' => $tipo, 'previsao' => true);        
+        $lista = $this->lancamentorepository->findPagarReceber($tipo, $datainicial, $datafinal);
         
         $saldoprevisao = 0;
         $saldoconsolidado = 0;
@@ -71,7 +75,7 @@ class MainController extends AbstractController
         }
                 
         $lista = $this->lancamentorepository->findBetweenDate($datainicial, $datafinal);   
-        //$lista = $this->lancamentorepository->findBy([] ,['data' => 'DESC']);
+        //$lista = $this->lancamentorepository->findBy([] ,['data' => 'DESC']); 
         return $lista;
     }       
 
@@ -209,7 +213,7 @@ class MainController extends AbstractController
 
     }
 
-    public function addagenda(Request $request)
+    public function addagenda(Request $request) 
     {   
         if ($request->request->get('id') <> 0){
             $agenda = $this->AgendamentosRepository->find($request->request->get('id'));
@@ -284,5 +288,47 @@ class MainController extends AbstractController
        }  
                
         return $lista;
+    }
+
+
+    public function graficoFluxo($id_conta, $mes){
+        $arraydata = array();
+        $arraydebito = array();
+        $arraycredito = array();
+        $arrayrsaldo = array();
+        $SaldoGeral = $this->fluxorepository->SaldoGeral($id_conta, $mes);
+        $Saldopendentes = $this->fluxorepository->Saldopendentes($id_conta);
+
+        foreach($SaldoGeral as $item){ 
+            foreach($item as $chave => $valor) {
+                if($chave == "data"){                    
+                    $arraydata[] = $valor;
+                }elseif($chave == "saldo"){
+                    $arrayrsaldo[] = $valor;
+                }             
+            }           
+        }
+
+        foreach($Saldopendentes as $item){ 
+            foreach($item as $chave => $valor) {
+                if($chave == "data"){                    
+                    $arraydata[] = $valor;                   
+                }elseif($chave == "credito"){
+                    $arrayrsaldo[] = $valor;
+                }elseif($chave == "debito"){
+                    $arrayrsaldo[] = $valor;
+                }              
+            }           
+        }
+
+        $graficfluxo = array(
+            'arraydata' => $arraydata,
+            'arraydebito'=> $arraydebito, 
+            'arraycredito' => $arraycredito, 
+            'arraysaldo' => $arrayrsaldo
+            
+        );        
+        return $graficfluxo;            
+        
     }
 }

@@ -14,6 +14,7 @@ use App\Repository\ContaCorrenteRepository;
 use App\Repository\CentroDeCustoRepository;
 use App\Repository\UserRepository;
 use App\Repository\AgendamentosRepository;
+use App\Repository\FluxoRepository;
 
 class AgendamentosController extends MainController
 {
@@ -23,16 +24,27 @@ class AgendamentosController extends MainController
         ContaCorrenteRepository $contacorrenterepository,
         CentroDeCustoRepository $centrodecustorepository, 
         LancamentoRepository $lancamentorepository,
-        UserRepository $userrepository       
+        UserRepository $userrepository,
+        FluxoRepository $fluxorepository  
     ) {  
         $this->entityManager = $entityManager;
-        parent::__construct($agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository);          
+        parent::__construct($agendamentosRepository, $contacorrenterepository, $centrodecustorepository, $lancamentorepository, $userrepository, $fluxorepository);          
             
     }
    
     public function index(Request $request)
     {              
-        $listapendentes = $this->listapendentes($request->query->get('debito'));       
+
+        $datainicial = $request->request->get('datainicial');
+        $datafinal = $request->request->get('datafinal');
+        if ($datainicial == null){
+            $datainicial = "2019-01-01";
+        }
+        if ($datafinal == null){
+            $datafinal = date("Y-m-d");
+        }
+        
+        $listapendentes = $this->listapendentes($request->query->get('debito'), $datainicial, $datafinal);       
         $listaitensagenda = $this->listaitensagenda($request->query->get('id'));
 
         return $this->render('agendamentos/index.html.twig', [
