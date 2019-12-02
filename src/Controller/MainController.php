@@ -198,13 +198,35 @@ class MainController extends AbstractController
     public function listaagendamentos($tipo){        
         $filtro = array('tipo' => $tipo);        
         $lista = $this->AgendamentosRepository->findBy($filtro);
+        $saldo = 0;
+        $nova_lista = array();
+
+        foreach($lista as $lis_id){
+            $agenda = $this->AgendamentosRepository->find($lis_id->getId());  
+            $itens = array();
+            $saldo = 0;
+
+            foreach($agenda->getItens() as $_item){
+                if($_item->getPrevisao()==true){
+                    array_push($itens, $_item);
+                    $saldo = $saldo + $_item->getValor();                  
+                }
+            }
+            $novo_item = array('id' => $lis_id->getId(), 
+                                'data' => $lis_id->getData(), 
+                                'descricao' => $lis_id->getDescricao(), 
+                                'total' => $saldo);
+            array_push($nova_lista, $novo_item);           
+        }
+
+
         
         $saldoprevisao = 0;
         $saldoconsolidado = 0;
         
         $total = $saldoconsolidado + $saldoprevisao;
         $lista = array(
-            'lista'=>$lista, 
+            'lista'=>$nova_lista, 
             'saldoprevisao' => $saldoprevisao, 
             'saldoconsolidado' => $saldoconsolidado, 
             'total' => $total );
@@ -212,11 +234,26 @@ class MainController extends AbstractController
         return $lista;
 
     }
+    
 
     public function addagenda(Request $request) 
     {   
         if ($request->request->get('id') <> 0){
-            $agenda = $this->AgendamentosRepository->find($request->request->get('id'));
+            $agenda = $this->AgendamentosRepository->find($request->request->get('id'));      
+            $teste = $agenda->getItens();  
+    
+            echo count($teste);
+            foreach ($teste as $value) { 
+                echo $value->getId();          
+                $agenda->removeIten($value);          
+            }      
+               
+            $this->entityManager->persist($agenda);
+            $this->entityManager->flush();   
+            //$agenda = $this->AgendamentosRepository->find($id);    
+            //$this->entityManager->remove($agenda); 
+            //$this->entityManager->flush(); 
+            //$agenda = $this->AgendamentosRepository->find($request->request->get('id'));
 
         }else{
             $agenda = new Agendamentos();
@@ -272,17 +309,27 @@ class MainController extends AbstractController
     public function listaitensagenda(int $id)
     {      
        if ($id <> 0){
-        $agenda = $this->AgendamentosRepository->find($id);      
-        $itens = $agenda->getItens(); 
+        $agenda = $this->AgendamentosRepository->find($id);  
+        $itens = array();
+        $saldo = 0;
+
+        foreach($agenda->getItens() as $_item){
+            if($_item->getPrevisao()==true){
+                array_push($itens, $_item);
+                $saldo = $saldo + $_item->getValor();                  
+            }
+         }
     
         $lista = array(
             'lista'=>$itens, 
-            'agenda' => $agenda 
+            'agenda' => $agenda,
+            'saldo' => $saldo 
              );
        }else{
         $lista = array(
             'lista'=>"", 
-            'agenda' => array( 'id' => 0, 'data' => new DateTime(), 'descricao' => "", 'total' => "") 
+            'agenda' => array( 'id' => 0, 'data' => new DateTime(), 'descricao' => "", 'total' => ""),
+            'saldo' => 0 
              );
 
        }  

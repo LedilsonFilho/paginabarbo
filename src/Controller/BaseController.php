@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use \Datetime;
+use \DateInterval;
 
 abstract class BaseController extends AbstractController
 {
@@ -165,4 +167,48 @@ abstract class BaseController extends AbstractController
     }
 
     abstract function atualizaEntidadeExistente(int $id, $entidade);
+
+    public function repete(Request $request): Response 
+    {
+        $repeticoes = $request->request->get('repetenuemrodevezes');
+        // Data de ínicio 
+        $date    = (new DateTime($request->request->get('data')));       
+        
+        for ($i = 0; $i < $repeticoes; $i++) {
+            // Adiciona 2 meses a data
+            $newDate = $date->add(new DateInterval('P'.$i.'M'));
+
+            $entidade = array(
+                'data' => $newDate->format('Y-m-d'),
+                'descricao' => $request->request->get('descricao'),
+                'previsao' => $request->request->get('previsao'),
+                'valor' => str_replace(",", ".", str_replace(".", "", $request->request->get('valor'))),
+                'dataedicao' => $request->request->get('dataedicao'),
+                'idconta'=> $request->request->get('idconta'),
+                'idcentrodecusto'=> $request->request->get('idcentrodecusto'),
+                'userid_id'=> $request->request->get('userid_id'), 
+                'debito' => $request->request->get('debito'),
+                'notafiscal'=> $request->request->get('notafiscal'),
+                'datapag'=> $request->request->get('datapag'),
+                'valorpago'=> str_replace(",", ".", str_replace(".", "",$request->request->get('valorpago'))),
+            );
+            $json =  json_encode($entidade);
+
+            $entidade = $this->factory->criarEntidade($json);
+
+            $this->entityManager->persist($entidade);
+            $this->entityManager->flush();
+            
+            $date = (new DateTime($request->request->get('data')));  
+
+        }
+
+        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')){
+            return new JsonResponse($entidade);
+        }else{
+            if ($request->get('_route') == "repete_lancamento"){
+                return $this->redirectToRoute('indexpagarreceber');
+            }
+        }  
+    }
 }

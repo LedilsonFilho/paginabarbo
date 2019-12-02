@@ -49,7 +49,8 @@ class IndexPagarReceberController extends MainController
             'lancamentocredito' => $listapendentesDebito['lista'],            
             'saldocreditotota' => $listapendentesDebito['total'],
             'filtroDataInicaial' => $datainicial,
-            'filtroDataFinal' => $datafinal, 
+            'filtroDataFinal' => $datafinal,  
+            'listacentrodecustos' => $this->listacentrodecustos(),
         ]);
     }
 }

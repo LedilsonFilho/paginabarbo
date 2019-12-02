@@ -35,8 +35,8 @@ class AgendamentosController extends MainController
     public function index(Request $request)
     {              
 
-        $datainicial = $request->request->get('datainicial');
-        $datafinal = $request->request->get('datafinal');
+        $datainicial = $request->query->get('datainicial');
+        $datafinal = $request->query->get('datafinal');
         if ($datainicial == null){
             $datainicial = "2019-01-01";
         }
@@ -48,12 +48,17 @@ class AgendamentosController extends MainController
         $listaitensagenda = $this->listaitensagenda($request->query->get('id'));
 
         return $this->render('agendamentos/index.html.twig', [
-            'listacontacorrente' => $this->listacontacorrente(),    
+            'listacontacorrente' => $this->listacontacorrente(),  
+            'listacentrodecustos' => $this->listacentrodecustos(),  
             'listasimplescontacorrente' => $this->listasimplescontacorrente(),  
             'listapendentes' => $listapendentes['lista'],   
             'tipo' => $request->query->get('debito'),
             'listaitensagenda' => $listaitensagenda['lista'],
-            'agendamento' => $listaitensagenda['agenda']
+            'agendamento' => $listaitensagenda['agenda'],
+            'filtroDataInicaial' => $datainicial,
+            'filtroDataFinal' => $datafinal,
+            'saldo' => $listaitensagenda['saldo'],
+            
         ]); 
     }
     

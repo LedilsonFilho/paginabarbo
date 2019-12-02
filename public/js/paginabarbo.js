@@ -1,8 +1,38 @@
-$(document).ready(function(){
-    
+$(document).ready(function(){ 
+    saldoagendamentodash()   
     document.getElementById("inp").addEventListener("change", readFile);
     document.getElementById("inpnovo").addEventListener("change", readFile);
+    
 });
+
+function saldoagendamentodash(){
+    var tableRefdebito = document.getElementById('tablaagendamentoapagar').getElementsByTagName('tbody')[0]; 
+    var rowCountdebito = tableRefdebito.rows.length;
+    var totaldebito = 0;
+    var tableRefcredito = document.getElementById('tablaagendamentoareceber').getElementsByTagName('tbody')[0]; 
+    var rowCountcredito = tableRefcredito.rows.length;
+    var totalcredito = 0;
+
+    for (var i = 0; i < rowCountdebito; i++) {
+        var row = tableRefdebito.rows[i];
+        totaldebito = parseFloat(totaldebito) + parseFloat(row.cells[2].innerHTML.replace(".", "").replace(",", "."));
+
+    }
+    for (var i = 0; i < rowCountcredito; i++) {
+        var row = tableRefcredito.rows[i];
+        totalcredito = parseFloat(totalcredito) + parseFloat(row.cells[2].innerHTML.replace(".", "").replace(",", "."));
+
+    }
+    var totaltextodebito = document.getElementById('totalagendamentodebito');
+    totaltextodebito.innerHTML = 'Total R$ ' + totaldebito.toFixed(2) // always two decimal digits
+        .replace('.', ',') // replace decimal point character with ,
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    var totaltextocredito = document.getElementById('totalagendamentocredito');
+    totaltextocredito.innerHTML = 'Total R$ ' + totalcredito.toFixed(2) // always two decimal digits
+        .replace('.', ',') // replace decimal point character with ,
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+}
 
 function readFile() {
   
@@ -87,6 +117,17 @@ function toggle_form_element(select, modal) {
             document.getElementById('editformbaixa1').style.display = 'none';
         }
  
+    }else if (modal == 'modalrepete') {
+        if (select.value == '1') {
+            document.getElementById('repeteformbaixa').style.display = 'none';
+            document.getElementById('repeteformbaixa1').style.display = 'none';
+        } else if (select.value == '0') {           
+            document.getElementById('repeteformbaixa').style.display = 'block';
+            document.getElementById('repeteformbaixa1').style.display = 'block';
+        } else {
+            document.getElementById('repeteformbaixa').style.display = 'none';
+            document.getElementById('repeteformbaixa1').style.display = 'none';
+        }
     }else{
         if (select.value == '1') {            
             document.getElementById('formbaixa').style.display = 'none';
@@ -103,6 +144,16 @@ function toggle_form_element(select, modal) {
             document.getElementById('formbaixa1').style.display = 'none';
         }
     }
+}
+
+function teste(id, data, datapag, idconta, iccentrodecusto, notafiscal, descricao, valor, debito, previsao, valorpago){
+    console.log("tesye")
+    console.log(id);
+    console.log(data);
+    console.log(datapag);
+    console.log(idconta);
+    var teste = '<a href="#" data-toggle="modal" data-target="#editLancamentoModal" onclick="teste(\''+id+'\',\''+data+'\',\''+datapag+'\',\''+iccentrodecusto+'\',\''+notafiscal+'\',\''+descricao+'\',\''+valor+'\',\''+debito+'\',\''+previsao+'\',\''+valorpago+')"><i class="fas fa-edit fa-sm"></i>';
+    console.log(teste)
 }
 
 function setaModalEditlancamento(Idlancamento, data, datapag, idconta, centrodecusto, notafiscal, descricao, valor,  debito,  previsao,  valorpago, baixa) {   
@@ -143,6 +194,43 @@ function setaModalEditlancamento(Idlancamento, data, datapag, idconta, centrodec
     document.getElementById('editvalor').value = valor;    
     document.getElementById('editprevisao').value = previsao;
     document.getElementById('editvalorpago').value = valorpago;
+    
+    
+}
+
+function setaModalRepetelancamento(Idlancamento, data, datapag, idconta, centrodecusto, notafiscal, descricao, valor,  debito,  previsao,  valorpago, baixa) {   
+    console.log(Idlancamento);
+    (previsao == 1) ? previsao = "1" : previsao = "0";
+    (debito == 1) ? debito = "1" : debito = "0"; 
+
+    if (previsao == 1) {
+        document.getElementById('repeteformbaixa').style.display = 'none';
+        document.getElementById('repeteformbaixa1').style.display = 'none';
+    } else if (previsao == 0) {
+        document.getElementById('repeteformbaixa').style.display = 'block';
+        document.getElementById('repeteformbaixa1').style.display = 'block';
+    } else {
+        document.getElementById('repeteformbaixa').style.display = 'none';
+        document.getElementById('repeteformbaixa1').style.display = 'none';
+    }
+
+    var radios = document.getElementsByName("debito");
+    for (var i = 0; i < radios.length; i++) {        
+        if (radios[i].value === debito && radios[i].id == "repetedebito") { 
+            radios[i].checked = true;
+        }
+    }
+   
+          
+    document.getElementById('repetedata').value = data;
+    document.getElementById('repetedatapag').value = datapag;
+    document.getElementById('repeteidconta').value = idconta;
+    document.getElementById('repetecentrodecusto').value = centrodecusto;
+    document.getElementById('repetenotafiscal').value = notafiscal;
+    document.getElementById('repetedescricao').value = descricao;
+    document.getElementById('repetevalor').value = valor;    
+    document.getElementById('repeteprevisao').value = previsao;
+    document.getElementById('repetevalorpago').value = valorpago;
     
     
 }
@@ -258,140 +346,6 @@ function deletacontacorrente() {
     });
 }
 
-function salvaragenda(tipo, id) {
-    //console.log('SALVAR');
-    var tableRef = document.getElementById('tablaagendamento').getElementsByTagName('tbody')[0];
-    var totaltexto = document.getElementById('totaltexto').innerHTML;
-    //console.log(totaltexto);
-    //teste = document.getElementById('dataagenda').value;        
-    var agendadata = document.getElementById('dataagenda').value;
-     var agendadescricao = document.getElementById('agendadescricao').value;
-    var rowCount = tableRef.rows.length;
-    var itens = [];
-
-
-    for (var i = 0; i < rowCount; i++) {
-        var row = tableRef.rows[i];
-        itens.push(row.cells[0].innerHTML)
-    }
-
-    post('/agendamentos', { itens: itens, data: agendadata, descricao: agendadescricao, tipo: tipo, total: totaltexto, id: id}, 'POST');
-    //console.log(itens);
-}
-function additemagenda(id, data, descricao, valor) {
-    // Get the checkbox
-    var checkBox = document.getElementById(id);
-    var tableRef = document.getElementById('tablaagendamento').getElementsByTagName('tbody')[0];
-    var total = 0;
-
-    // If the checkbox is checked, display the output text
-    if (checkBox.checked == true) {
-
-        //console.log(descricao);
-
-
-        // Insert a row in the table at the last row
-        var newRow = tableRef.insertRow();
-
-        // Insert a cell in the row at index 0
-        var newCell0 = newRow.insertCell(0);
-        var newCell1 = newRow.insertCell(1);
-        var newCell2 = newRow.insertCell(2);
-        var newCell3 = newRow.insertCell(3);
-
-        // Append a text node to the cell
-        var auxid = document.createTextNode(id);
-        var auxdata = document.createTextNode(data);
-        var auxdescricao = document.createTextNode(descricao);
-        var auxvalor = document.createTextNode(valor);
-        newCell0.appendChild(auxid);
-        newCell1.appendChild(auxdata);
-        newCell2.appendChild(auxdescricao);
-        newCell3.appendChild(auxvalor);
-
-        var rowCount = tableRef.rows.length;
-
-        for (var i = 0; i < rowCount; i++) {
-            var row = tableRef.rows[i];
-            total = parseFloat(total) + parseFloat(row.cells[3].innerHTML.replace(".", "").replace(",", "."));
-
-        }
-        var totaltexto = document.getElementById('totaltexto');
-        totaltexto.innerHTML = total.toFixed(2) // always two decimal digits
-            .replace('.', ',') // replace decimal point character with ,
-            .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-
-
-    } else {
-        var totaltexto = document.getElementById('totaltexto');
-        total = parseFloat(totaltexto.innerHTML.replace(".", "").replace(",", "."));
-        //console.log(totaltexto.innerHTML.replace(".", "").replace(",", "."))          
-        var rowCount = tableRef.rows.length;
-        for (var i = 0; i < rowCount; i++) {
-            var row = tableRef.rows[i];
-            if (row.cells[0].innerHTML == id) {
-                //console.log(row.rowIndex);
-                tableRef.deleteRow(row.rowIndex - 1);
-                total = parseFloat(total) - parseFloat(row.cells[3].innerHTML.replace(".", "").replace(",", "."));
-
-            }
-
-        }
-
-
-        totaltexto.innerHTML = total.toFixed(2) // always two decimal digits
-            .replace('.', ',') // replace decimal point character with ,
-            .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-        //tableRef.deleteRow(0); 
-    }
-}
-
-function post(path, params, method) {
-
-    // The rest of this code assumes you are not using a library.
-    // It can be made less wordy if you use one.
-    const form = document.createElement('form');
-    form.method = method;
-    form.action = path;
-
-    for (const key in params) {
-        if (params.hasOwnProperty(key)) {
-            const hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = key;
-            hiddenField.value = params[key];
-
-            form.appendChild(hiddenField);
-        }
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-}
-
-function deletaagendamento(id) {
-    var URL = "/agendamentos/" + id;    
-
-     $.ajax({
-        url: URL,
-        type: 'DELETE',        
-        success: function (result) {
-            //alert("success?");
-           // $('#deleteLancamentoModal').modal('hide');
-            location.reload();
-        },
-        error: function(xhr, textStatus, errorThrow){
-            document.getElementById('testeerro').innerHTML =xhr.responseText;
-            //alert();
-            $('#deleteLancamentoModal').modal('hide');
-        }
-        
-    }); 
-    
-
-    //post('/agendamentos', { itens: itens, data: agendadata, descricao: agendadescricao, tipo: tipo, total: totaltexto}, 'POST');
-    console.log(id);
-}
 
 
 
