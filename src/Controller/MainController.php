@@ -338,32 +338,34 @@ class MainController extends AbstractController
     }
 
 
-    public function graficoFluxo($id_conta, $mes){
+    public function graficoFluxo($id_conta){
         $arraydata = array();
         $arraydebito = array();
         $arraycredito = array();
         $arrayrsaldo = array();
-        $SaldoGeral = $this->fluxorepository->SaldoGeral($id_conta, $mes);
-        $Saldopendentes = $this->fluxorepository->Saldopendentes($id_conta);
+        $SaldoGeral = $this->fluxorepository->SaldoGeral($id_conta);
+        $Saldopendentes = $this->fluxorepository->Saldopendentes($id_conta);   
 
         foreach($SaldoGeral as $item){ 
             foreach($item as $chave => $valor) {
                 if($chave == "data"){                    
                     $arraydata[] = $valor;
+                    //echo $valor.'-';
                 }elseif($chave == "saldo"){
                     $arrayrsaldo[] = $valor;
+                    //echo $valor.'<br>';
                 }             
-            }           
+            }         
         }
 
         foreach($Saldopendentes as $item){ 
             foreach($item as $chave => $valor) {
                 if($chave == "data"){                    
-                    $arraydata[] = $valor;                   
+                    $arraydatapendente[] = $valor;                   
                 }elseif($chave == "credito"){
-                    $arrayrsaldo[] = $valor;
+                    $arraycredito[] = $valor;
                 }elseif($chave == "debito"){
-                    $arrayrsaldo[] = $valor;
+                    $arraydebito[] = $valor;
                 }              
             }           
         }

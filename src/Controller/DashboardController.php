@@ -59,7 +59,7 @@ class DashboardController extends MainController
         $listapendentesCredito = $this->listapendentes(true, $datainicial, $datafinal);
         $listapendentesDebito = $this->listapendentes(false, $datainicial, $datafinal);
         $graficoBarra = $this->graficoBarra(); 
-        $graficoFluxo = $this->graficoFluxo(31,'2019-09-01');
+        $graficoFluxo = $this->graficoFluxo(31); 
         $listaagendamentocredito = $this->listaagendamentos(false);
         $listaagendamentosdebito = $this->listaagendamentos(true);
               

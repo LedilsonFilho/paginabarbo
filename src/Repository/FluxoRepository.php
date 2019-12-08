@@ -15,7 +15,7 @@ class FluxoRepository extends ServiceEntityRepository
     }
 
       
-    public function SaldoGeral($idconta_id, $mes)
+    public function SaldoGeral($idconta_id) 
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -27,12 +27,12 @@ class FluxoRepository extends ServiceEntityRepository
                     WHERE lancamento.data >= L2.data AND idconta_id = :idconta_id AND previsao = 0
                 ) AS saldo
             FROM lancamento
-            WHERE idconta_id = :idconta_id AND previsao = 0 AND data BETWEEN :mes and curdate()
+            WHERE idconta_id = :idconta_id AND previsao = 0 AND data BETWEEN DATE_SUB(curdate(), INTERVAL 1 MONTH) and curdate()
             GROUP BY DAY(data), MONTH(data), YEAR(data) 
             ORDER BY data ASC                     
             ';
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['idconta_id' => $idconta_id, 'mes' => $mes]);
+        $stmt->execute(['idconta_id' => $idconta_id]);
 
         // returns an array of arrays (i.e. a raw data set)
         return $stmt->fetchAll();

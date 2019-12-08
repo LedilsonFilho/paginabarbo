@@ -2,168 +2,8 @@
 
 {% block body %}
 <div class="row">
-    <!-- Card de Contas à Pagar -->
-    <div class="col-xl-12 col-md-12 mb-4">
-        <div class="card shadow">
-
-
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs md-tabs nav-justified primary-color" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#NovoLançamento" role="tab">
-                        <h6 class="font-weight-bold">Novo Lançamento</h6>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#NovaTransferência" role="tab">
-                        <h6 class="font-weight-bold">Nova Transferência</h6>
-                    </a>
-                </li>
-            </ul>
-            <!-- Nav tabs -->
-
-            <!-- Tab panels -->
-            <div class="tab-content">
-                <!-- Panel 1 -->
-                <div class="tab-pane fade in show active" id="NovoLançamento" role="tabpanel">
-                    <!-- Inicio da Table -->
-                    <div class="card-body p-0 text-center">
-                        <div class="col-sm-12 col-md-12">
-                            <form action="/lancamentos" method="POST" class="mt-3" id="formulariolancamento">
-                                <div class="form-row">
-                                    <input type="hidden" id="transferencia" name="transferencia" value="false">
-                                    <input type="hidden" id="idusuario" name="userid_id" value="{{ app.user.id }}">
-                                    <input type="hidden" id="dataedicao" name="dataedicao" value="{{ "now"|date("Y-m-d") }}">
-                                    <div class="form-group col-md-3">
-                                        <input id="data" name="data" class="form-control" type="date" required>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <select id="idconta" name="idconta" class="form-control" required>
-                                            <option value="" disabled selected>Conta</option>
-                                            {% for contacorrente in listacontacorrente %}
-                                            <option value="{{contacorrente.id}}">{{contacorrente.nome}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <select id="centrodecusto" name="idcentrodecusto" class="form-control" required>
-                                            <option value="" disabled selected>Centro de Custo</option>
-                                            {% for centrodecustos in listacentrodecustos %}
-                                            <option value="{{centrodecustos.id}}">{{centrodecustos.nome}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-1">
-                                        <input id="notafiscal" name="notafiscal" type="text" class="form-control"
-                                            placeholder="Nota Fiscal">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <div class="my-auto d-flex justify-content-around">
-                                            <input type="radio" name="debito" value="1" required> Débito
-                                            <input type="radio" name="debito" value="0"> Crédito
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    
-                                    <div class="form-group col-md-6">
-                                        <input id="descricao" name="descricao" type="text" class="form-control"
-                                            placeholder="Descrição" required>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <input type="text" name="valor" class="form-control" id="valor"
-                                            placeholder="Valor R$" required>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <select onchange="toggle_form_element(this)" id="previsao" name="previsao"
-                                            class="form-control" required>
-                                            <option value="" disabled selected>Tipo</option>
-                                            <option value="1">Previsão</option>
-                                            <option value="0">Consolidado</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-1">
-                                        <button type="submit" id="submitnovocentrocusto" class="btn btn-primary">Salvar</button>
-                                    </div>
-
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6" style="display: none" id="formbaixa">
-                                        <input class="form-control" name="datapag" type="date"
-                                            placeholder="Data do Pagamento" value="" id="datapag">
-                                    </div>
-                                    <div class="form-group col-md-6" style="display: none" id="formbaixa1">
-                                        <input id="valorpago" name="valorpago" type="text" class="form-control"
-                                            placeholder="Valor Pago R$">
-                                    </div>
-                                </div>
-                        </div>
-                        
-                        </form>
-                    </div>
-                    <!-- fim Table -->
-                </div>
-                <!-- Panel 1 -->
-
-                <!-- Panel 2 -->
-                <div class="tab-pane fade" id="NovaTransferência" role="tabpanel">
-                    <div class="card-body p-0 text-center">
-                        <div class="col-sm-12 col-md-12">
-                            <form action="/transferencia" method="POST" class="mt-3" id="formulariolancamento">
-                                <div class="form-row">
-                                    <input type="hidden" id="idusuario" name="userid_id" value="{{ app.user.id }}">
-                                    <input type="hidden" id="dataedicao" name="dataedicao" value="{{ "now"|date("Y-m-d") }}">
-                                    <div class="form-group col-md-3">
-                                        <input id="data" name="data" class="form-control" type="date" required>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <select id="idconta" name="idcontaorigem" class="form-control" required>
-                                            <option value="" disabled selected>Conta de Origem</option>
-                                            {% for contacorrente in listacontacorrente %}
-                                            <option value="{{contacorrente.id}}">{{contacorrente.nome}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <select id="idconta" name="idcontadestino" class="form-control" required>
-                                            <option value="" disabled selected>Conta de Destino</option>
-                                            {% for contacorrente in listacontacorrente %}
-                                            <option value="{{contacorrente.id}}">{{contacorrente.nome}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <input type="text" name="valor" class="form-control" id="valor"
-                                            placeholder="Valor R$" required>
-                                    </div>
-
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-3">
-                                        <select id="centrodecusto" name="idcentrodecusto" class="form-control" required>
-                                            <option value="" disabled selected>Centro de Custo</option>
-                                            {% for centrodecustos in listacentrodecustos %}
-                                            <option value="{{centrodecustos.id}}">{{centrodecustos.nome}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-8">
-                                        <input id="descricao" name="descricao" type="text" class="form-control"
-                                            placeholder="Descrição" required>
-                                    </div>
-                                    <div class="form-group col-md-1">
-                                        <button type="submit" id="submitnovocentrocusto" class="btn btn-primary">Salvar</button>
-                                    </div>
-                                </div>
-                        </div>                       
-                        </form>
-                    </div>
-
-                </div>
-                <!-- Panel 2 -->
-            </div>
-            <!-- Tab panels -->
-        </div>
+    <div class="col-sm-12 col-xl-12 col-md-12 mb-4">
+        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#novoLancamentoModal">Novo Lançamento</a>        
     </div>
 </div>
 <div class="row">
@@ -259,7 +99,6 @@
     </div>
 </div>
 
-
 <!-- Delete Modal-->
 <div class="modal fade" id="deleteLancamentoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -313,7 +152,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Edit Modal-->
 <div class="modal fade" id="editLancamentoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -403,6 +241,183 @@
 
 
 
+        </div>
+    </div>
+</div>
+
+<!-- New Modal-->
+<div class="modal fade" id="novoLancamentoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Novo Lançamento?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="col-sm-12 col-md-12">
+                <!-- Nav tabs -->
+            <ul class="nav nav-tabs md-tabs nav-justified primary-color" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#NovoLançamento" role="tab">
+                        <h6 class="font-weight-bold">Novo Lançamento</h6>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#NovaTransferência" role="tab">
+                        <h6 class="font-weight-bold">Nova Transferência</h6>
+                    </a>
+                </li>
+            </ul>
+            <!-- Nav tabs -->
+
+            <!-- Tab panels -->
+            <div class="tab-content">
+                <!-- Panel 1 -->
+                <div class="tab-pane fade in show active" id="NovoLançamento" role="tabpanel">
+                    <!-- Inicio da Table -->
+                    <div class="card-body p-0 text-center">
+                        <div class="col-sm-12 col-md-12">
+                            <form action="/lancamentos" method="POST" class="mt-3" id="formulariolancamento">
+                                <div class="form-row">
+                                    <input type="hidden" id="transferencia" name="transferencia" value="false">
+                                    <input type="hidden" id="idusuario" name="userid_id" value="{{ app.user.id }}">
+                                    <input type="hidden" id="dataedicao" name="dataedicao" value="{{ "now"|date("Y-m-d") }}">
+                                    <div class="form-group col-md-3">
+                                        <input id="data" name="data" class="form-control" type="date" required>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <select id="idconta" name="idconta" class="form-control" required>
+                                            <option value="" disabled selected>Conta</option>
+                                            {% for contacorrente in listacontacorrente %}
+                                            <option value="{{contacorrente.id}}">{{contacorrente.nome}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <select id="centrodecusto" name="idcentrodecusto" class="form-control" required>
+                                            <option value="" disabled selected>Centro de Custo</option>
+                                            {% for centrodecustos in listacentrodecustos %}
+                                            <option value="{{centrodecustos.id}}">{{centrodecustos.nome}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <input id="notafiscal" name="notafiscal" type="text" class="form-control"
+                                            placeholder="Nota Fiscal">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <div class="my-auto d-flex justify-content-around">
+                                            <input type="radio" name="debito" value="1" required> Débito
+                                            <input type="radio" name="debito" value="0"> Crédito
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">                                    
+                                    <div class="form-group col-md-6">
+                                        <input id="descricao" name="descricao" type="text" class="form-control"
+                                            placeholder="Descrição" required>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <input type="text" name="valor" class="form-control" id="valor"
+                                            placeholder="Valor R$" required>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <select onchange="toggle_form_element(this)" id="previsao" name="previsao"
+                                            class="form-control" required>
+                                            <option value="" disabled selected>Tipo</option>
+                                            <option value="1">Previsão</option>
+                                            <option value="0">Consolidado</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                         <button type="submit" id="submitnovocentrocusto" class="btn btn-primary">Salvar</button>
+                                    </div>
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6" style="display: none" id="formbaixa">
+                                        <input class="form-control" name="datapag" type="date"
+                                            placeholder="Data do Pagamento" value="" id="datapag">
+                                    </div>
+                                    <div class="form-group col-md-6" style="display: none" id="formbaixa1">
+                                        <input id="valorpago" name="valorpago" type="text" class="form-control"
+                                            placeholder="Valor Pago R$">
+                                    </div>
+                                </div>
+                        </div>
+                        
+                        </form>
+                    </div>
+                    <!-- fim Table -->
+                </div>
+                <!-- Panel 1 -->
+
+                <!-- Panel 2 -->
+                <div class="tab-pane fade" id="NovaTransferência" role="tabpanel">
+                    <div class="card-body p-0 text-center">
+                        <div class="col-sm-12 col-md-12">
+                            <form action="/transferencia" method="POST" class="mt-3" id="formulariolancamento">
+                                <div class="form-row">
+                                    <input type="hidden" id="idusuario" name="userid_id" value="{{ app.user.id }}">
+                                    <input type="hidden" id="dataedicao" name="dataedicao" value="{{ "now"|date("Y-m-d") }}">
+                                    <div class="form-group col-md-3">
+                                        <input id="data" name="data" class="form-control" type="date" required>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <select id="idconta" name="idcontaorigem" class="form-control" required>
+                                            <option value="" disabled selected>Conta de Origem</option>
+                                            {% for contacorrente in listacontacorrente %}
+                                            <option value="{{contacorrente.id}}">{{contacorrente.nome}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <select id="idconta" name="idcontadestino" class="form-control" required>
+                                            <option value="" disabled selected>Conta de Destino</option>
+                                            {% for contacorrente in listacontacorrente %}
+                                            <option value="{{contacorrente.id}}">{{contacorrente.nome}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <input type="text" name="valor" class="form-control" id="valor"
+                                            placeholder="Valor R$" required>
+                                    </div>
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <select id="centrodecusto" name="idcentrodecusto" class="form-control" required>
+                                            <option value="" disabled selected>Centro de Custo</option>
+                                            {% for centrodecustos in listacentrodecustos %}
+                                            <option value="{{centrodecustos.id}}">{{centrodecustos.nome}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <input id="descricao" name="descricao" type="text" class="form-control"
+                                            placeholder="Descrição" required>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <button type="submit" id="submitnovocentrocusto" class="btn btn-primary">Salvar</button>
+                                    </div>
+                                </div>
+                        </div>
+                       
+                        </form>
+                    </div>
+
+                </div>
+                <!-- Panel 2 -->
+            </div>
+            <!-- Tab panels -->
+            
+            </div>
+            
+            </form>
         </div>
     </div>
 </div>
